@@ -1,0 +1,118 @@
+#include <iostream>
+#include <fstream>
+#include<string>
+using namespace std;
+void userfile_editor(string filename, int NoOfAttempts, int time);
+string userfile_maker();
+void highScore(float points = 0);
+int main()
+{
+	string filename;
+	filename = userfile_maker();
+	userfile_editor(filename, 0, 2);
+	highScore();
+	return 0;
+}
+string userfile_maker()
+{
+	string username, filename, t = ".txt";
+	bool NFlag, OFLag;
+	char usertype;
+	cout << "Are you a new user or an old user.\n";
+	//loop for username account creation or authentication
+		do
+		{
+			NFlag = 0, OFLag = 0;
+		cout << "Enter 'n' for new user or 'o' for old user.";
+		cin >> usertype;
+		cout << "Enter the user name :";
+		cin >> username;
+		filename = username + t;
+		
+		if (usertype == 'n')   //user is a new player
+		{
+			string s;
+			ifstream infile("usernames.txt");
+
+			//check whether the entered username matches with already existing username
+			while (infile)     // read until the file ends
+			{
+				getline(infile, s);     // goes to next line each time the loops run
+
+				// if username already exists 
+				if (s == username)
+				{
+					cout << "This username already exists.\n\n";
+					NFlag = 1;
+					break;
+				}
+			}
+			infile.close();
+
+			//if username already does not exist
+			if (NFlag == 0)
+			{
+				ofstream write("usernames.txt", ios ::app);
+				write << username << endl;
+				write.close();
+				ofstream Write(filename);
+				Write << "\t No of Attempts \t" << "Time Taken\t" << "Points" << endl;
+				Write.close();
+			}
+		}
+
+		//In case user is an old player, authenticate the user account
+		else
+		{
+			NFlag = 1;
+			string s;
+			ifstream read("usernames.txt");
+			while (read)
+			{
+				getline(read, s);
+				if (s == username)
+				{
+					OFLag = 1;
+					break;
+				}
+			}
+			if (OFLag == 0)
+			{
+				cout << "This username does not exist.\n";
+			}
+			read.close();
+		}
+	} while (NFlag == 1 && OFLag == 0);
+	return filename;
+}
+void userfile_editor(string filename, int NoOfAttempts, int time)
+{
+	float points;
+	ofstream write(filename, ios::app);
+	points = 1000 - ((200 * NoOfAttempts) + (time));
+	cout <<"My points are : "<< points << endl;
+	write << "\t\t " << NoOfAttempts << "\t\t\t\t\t " << time << "\t\t\t\t\t" << points << endl;
+	write.close();
+	highScore(points);
+}
+void highScore(float points)
+{
+	float s;
+	ifstream read("HighestScore.txt");
+	read >> s;
+	read.close();
+	if (points == 0)
+	{	
+		cout << "The highest score is " << s << endl;
+	}
+	else
+	{
+		if (points > s)
+		{
+			ofstream write("HighestScore.txt");
+			write << points;
+			cout << "\t\t\t\t************\n\nHurray! You scored the highest points in the game.\n";
+			write.close();
+		}
+	}
+}
