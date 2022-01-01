@@ -1,0 +1,25 @@
+// writng and reading data in and from a file 
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+int main()
+{  // for writing data in a disk file
+
+	ofstream write("first file.txt");  //create object write of ofstream class and open first file.txt for writing data in it
+	string info, info1;
+	info = "PIEAS is acronym for Pakistan Institute of Engineering and Applied Sciences.";
+	info1 = "It is located in Nilore, Islamabad.";
+	write << info <<  endl;
+	write << info1 << endl;
+
+	write.close();                      // close the opened file 
+
+	// For reading data from a  disk file 
+	ifstream read("first file.txt");    // create object read of ifstream class and open firstfile.txt for readind data from it
+	string s, s1;
+	getline(read, s);    // getline() function is used to get a complete line from the file
+	getline(read, s1);    
+	cout << s << endl << s1 << endl;
+	return 0;
+}
